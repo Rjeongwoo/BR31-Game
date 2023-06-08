@@ -1,113 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>베스킨라빈스31</title>
-  </head>
-  <body>
-    <h1>베스킨라빈스31 게임</h1>
+<html>
+<head>
+	<title>베스킨라빈스31</title>
+</head>
+<body>
 
-    <div>
-      <label for="numPlayers">참가 인원 수 : </label>
-      <input
-        type="number"
-        id="numPlayers"
-        name="numPlayers"
-        min="2"
-        max="10"
-        value="2"
-      />
-      <button onclick="startGame()">게임 시작</button>
-    </div>
+	<h1>베스킨라빈스31 게임</h1>
 
-    <div>
-      <p>현재 총합 : <span id="currentNum">0</span></p>
-      <p>목표 숫자 : <span id="lastNum">31</span></p>
-      <p>다음 순서 : <span id="nextPlayer">1</span></p>
-      <label for="inputNum">1 ~ 3 사이의 수를 입력 : </label>
-      <input type="number" id="inputNum" name="inputNum" min="1" max="3" />
-      <button onclick="playTurn()">입력</button>
-    </div>
+	<div>
+		<!-- 라벨과 결합될 요소의 id 속성값 -->
+		<label for = "numPlayers">참가 인원 수 : </label> 
+		<!-- 숫자를 입력할 수 있는 입력 필드 최댓값 10, 최솟값 2, 초깃값 2-->
+		<input type = "number" id = "numPlayers" name = "numPlayers" min = "2" max = "10" value = "2"> 
+		<!-- 버튼 클릭시 startGame() 함수 실행 -->
+		<button onclick = "startGame()">게임 시작</button>
 
-    <div>
-      <h2>진행도 :</h2>
-      <ul id="results"></ul>
-    </div>
+	</div>
 
-    <script>
-      var numPlayers = 2;
-      var currentPlayer = 1;
-      var currentNum = 0;
-      var results = [];
-      var targetNumber = 31;
+	<div>
+		<!-- 설정값 입력전 기본값들, 현재 총합 0, 목표 숫자 31, 다음 순서 1 -->
+		<p>현재 총합 : <span id = "currentNum">0</span></p>
+    <p>목표 숫자 : <span id = "lastNum">31</span></p>
+		<p>다음 순서 : <span id = "nextPlayer">1</span></p>
+		<!-- 라벨과 결합될 요소의 id 속성값 -->
+		<label for = "inputNum">1 ~ 3 사이의 수를 입력 : </label>
+		<!-- 숫자를 입력할 수 있는 입력 필드 최댓값 3, 최솟값 1-->
+		<input type = "number" id = "inputNum" name = "inputNum" min = "1" max = "3">
+		<!-- 버튼 클릭시 playTurn() 함수 실행 -->
+		<button onclick = "playTurn()">입력</button>
 
-      function resetGame() {
-        numPlayers = 2;
-        currentPlayer = 1;
-        currentNum = 0;
-        results = [];
+	</div>
 
-        document.getElementById("numPlayers").value = 2;
-        document.getElementById("nextPlayer").textContent = "1";
-        document.getElementById("currentNum").textContent = "0";
-        document.getElementById("inputNum").value = "";
-        document.getElementById("results").innerHTML = "";
+	<div>
+		<!-- 진행도 크고 진하게 표시-->
+		<h2>진행도 : </h2>
+		<!-- 순서가 없는 리스트로 진행도 출력 -->
+		<ul id = "results"></ul>
 
-        alert("게임을 초기화 합니다.");
-      }
+	</div>
 
-      function startGame() {
-        targetNumber = parseInt(prompt("목표 숫자 설정 : "));
+	<script>
 
-        numPlayers = document.getElementById("numPlayers").valueAsNumber;
-        document.getElementById("nextPlayer").textContent = "1";
-        document.getElementById("currentNum").textContent = "0";
-        document.getElementById("inputNum").value = "";
-        document.getElementById("lastNum").textContent = targetNumber;
+		const resetGame = () => {
+      // 게임 초기화 시 화면에 보여지는 기본 설정 값
+		  document.getElementById("numPlayers").value = 2;
+			document.getElementById("currentNum").textContent = "0";
+      document.getElementById("lastNum").textContent = "31";
+ 		  document.getElementById("nextPlayer").textContent = "1";
 
-        results = [];
-        currentPlayer = 1;
-        currentNum = 0;
+      // 1 ~ 3 사이의 수를 입력하는 네모 칸에 올라가 있는 값을 없앰
+ 		  document.getElementById("inputNum").value = "";
+ 		  document.getElementById("results").innerHTML = "";
 
-        alert("게임을 시작합니다.");
-      }
+		  alert("게임을 초기화합니다.");
+		}
 
-      function playTurn() {
-        var inputNum = document.getElementById("inputNum").valueAsNumber;
+		const startGame = () => {
+     // 창을 띄워 사용자에게 목표 숫자를 입력받고 정수형으로 바꿔줌
+ 		 targetNumber = parseInt(prompt("목표 숫자 설정 : "));
 
-        if (isNaN(inputNum) || inputNum < 1 || inputNum > 3) {
-          alert("1 ~ 3 사이의 수를 입력 해주세요");
-          console.log(currentNum);
-          return;
-        }
+     // 사용자에게 입력 받은 참가 인원 수를 numPlayers에 넣음
+ 		 numPlayers = document.getElementById("numPlayers").valueAsNumber;
 
-        currentNum += inputNum;
-        document.getElementById("currentNum").textContent = currentNum;
-        results.push({ player: currentPlayer, number: inputNum });
-        document.getElementById("results").innerHTML = results
-          .map(
-            (result) =>
-              `<li>${result.player}번 참가자가 ${result.number} 더했습니다.</li>`
-          )
-          .join("");
+     // 게임 시작 시 화면에 보여지는 현재 총합 : 0
+     document.getElementById("currentNum").textContent = "0";
+     // 게임 시작 시 화면에 보여지는 다음 순서 : 1
+ 		 document.getElementById("nextPlayer").textContent = "1";
+     // 1 ~ 3 사이의 수를 입력하는 네모 칸에 올라가 있는 값을 없앰
+ 		 document.getElementById("inputNum").value = "";
+     // 게임 시작 시 화면에 보여지는 목표 숫자 : (사용자가 입력한 값)
+ 		 document.getElementById("lastNum").textContent = targetNumber;
 
-        if (currentNum >= targetNumber) {
-          alert(currentPlayer + "번 참가자 패배");
-          resetGame();
-          return;
-        }
+     // result 배열 초기화
+ 		 results = [];
+     // currentPlayer는 1, currentNum 0으로 바꿔줌
+		 currentPlayer = 1;
+		 currentNum = 0;
 
-        currentPlayer++;
+     // 시작을 알려주는 창을 띄움
+ 		 alert("게임을 시작합니다.");
+		}
 
-        if (currentPlayer > numPlayers) {
-          currentPlayer = 1;
-        }
+		const playTurn = () => {
+      // 사용자에게 입력받은 수를 inputNum에 대입
+  		const inputNum = document.getElementById("inputNum").valueAsNumber;
 
-        document.getElementById("nextPlayer").textContent = currentPlayer;
-        document.getElementById("inputNum").value = "";
-      }
-    </script>
-  </body>
+      // 사용자가 입력받은 수가 숫자가 아니거나, 1보다 작거나 3보다 큰 경우 실행
+ 		  if (isNaN(inputNum) || inputNum < 1 || inputNum > 3) {
+        // 경고창을 띄움
+    		alert("1 ~ 3 사이의 수를 입력해주세요");
+    		console.log(currentNum);
+    		return;
+  		}
+
+      // 현재 총합 currentNum에 사용자가 입력한 inputNum 값을 더함
+  		currentNum += inputNum;
+
+      // 사용자 값을 더한 currentNum을 화면에 출력함
+  		document.getElementById("currentNum").textContent = currentNum;
+
+      // result 배열에 player 속성에 currentPlayer 값을, number에 inputNum인 사용자입력값을 넣음
+  		results.push({ player: currentPlayer, number: inputNum });
+      // .mpa 메소드를 사용해 <li>${result.player}번 참가자가 ${result.number} 더했습니다.</li>인 새 배열로 변환 후 출력
+  		document.getElementById("results").innerHTML = results.map(result => `<li>${result.player}번 참가자가 ${result.number} 더했습니다.</li>`).join("");
+
+      // 현재 총합인 currentNum이 목표숫자인 targetNumber 보다 클 경우 해당 순서인 currentPlayer의 패배
+      // resetGame 함수 실행
+  		if (currentNum >= targetNumber) {
+    		alert(currentPlayer + "번 참가자 패배");
+    		resetGame();
+    		return;
+  		}
+
+      // currentPlayer 값 1증가
+  		currentPlayer++;
+
+      // 1증가한 currentPlayer값이 numPlayers 보다 큰 경우 currentPlayer를 1로 초기화 
+  		if (currentPlayer > numPlayers) {
+    		currentPlayer = 1;
+  		}
+
+      // 1증가한 currentPlayer 값을 '다음 순서 :' 부분에 출력
+  		document.getElementById("nextPlayer").textContent = currentPlayer;
+      // 입력버튼 누른 후 네모칸에 넣었던 숫자 사라지게함
+      document.getElementById("inputNum").value = "";
+		}
+	</script>
+
+</body>
 </html>
