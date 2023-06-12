@@ -23,11 +23,31 @@
 	</div>
 
 	<div>
+    <h3 id="timer">10초</h3>
 		<h2>진행도 : </h2>
 		<ul id = "results"></ul>
 	</div>
 
 	<script>
+    var timer;
+
+    const startTimer = () => {
+      resetTimer();
+      var seconds = 10;
+      timer = setInterval(function() {
+        seconds--;
+        document.getElementById("timer").textContent = seconds + "초";
+        if (seconds <= 0) {
+          alert("시간 초과!\n" + currentPlayer + "번 참가자 패배");
+          resetGame();
+        }
+      }, 1000);
+    }
+
+    const resetTimer = () => {
+      document.getElementById("timer").textContent = "10초"; 
+      clearInterval(timer); 
+    }
 
 		const resetGame = () => {
 
@@ -39,6 +59,7 @@
  		  document.getElementById("results").innerHTML = "";
 
 		  alert("게임을 초기화합니다.");
+      resetTimer();
 		}
 
 		const startGame = () => {
@@ -47,11 +68,10 @@
 			
 			if(isNaN(numPlayers)){
 				alert("참가 인원 수를 입력해주세요.");
-				resetGame();
 				return;
 			}else if(numPlayers <= 1){
 				alert("참가 인원 수는 2명 이상 지정해주세요.");
-				resetGame();
+        document.getElementById("numPlayers").value = "";
 				return;
 			}
 
@@ -59,11 +79,9 @@
 		 
 			if(isNaN(targetNumber)){
 				alert('목표 숫자를 설정해주세요.');
-				resetGame();
 				return;
 			}else if(targetNumber < 10){
 				alert('목표 숫자는 10 이상 설정해주세요.');
-				resetGame();
 				return;
 			}
 							
@@ -77,10 +95,11 @@
 			currentNum = 0;
 
  		 alert("게임을 시작합니다.");
-
+     startTimer();
 		}
 
 		const playTurn = () => {
+    
   		const inputNum = document.getElementById("inputNum").valueAsNumber;
 
  		  if (isNaN(inputNum) || inputNum < 1 || inputNum > 3) {
@@ -90,9 +109,10 @@
   		}
 
   		currentNum += inputNum;
+      
   		document.getElementById("currentNum").textContent = currentNum;
-  		results.push({ player: currentPlayer, number: inputNum });
-  		document.getElementById("results").innerHTML = results.map(result => `<li>${result.player}번 참가자가 ${result.number} 더했습니다.</li>`).join("");
+  		results.push({ player: currentPlayer, number: inputNum, sum: currentNum });
+  		document.getElementById("results").innerHTML = results.map(result => `<li>${result.player}번 참가자가 ${result.number}을 더해 ${result.sum}이 되었습니다.</li>`).join("");
 
   		if (currentNum >= targetNumber) {
     		alert(currentPlayer + "번 참가자 패배");
@@ -108,6 +128,10 @@
 
   		document.getElementById("nextPlayer").textContent = currentPlayer;
   		document.getElementById("inputNum").value = "";
+
+      resetTimer();
+      startTimer();
+      
 		}
 	</script>
 
